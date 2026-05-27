@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: radial-gradient(circle at top left, #fdfbfb 0%, #ebedee 100%);
+    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.glass-window {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+.glass-sidebar {
+    background: rgba(245, 245, 247, 0.5);
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    transition: margin-left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s ease;
+}
+
+.sidebar-collapsed {
+    margin-left: -14rem;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.safari-address-bar {
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.safari-address-bar:focus-within {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+}
+
+.apple-card,
+.apple-book-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.apple-card:hover,
+.apple-book-card:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.traffic-light {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.close-btn {
+    background-color: #ff5f56;
+    border: 1px solid #e0443e;
+}
+
+.minimize-btn {
+    background-color: #ffbd2e;
+    border: 1px solid #dea123;
+}
+
+.maximize-btn {
+    background-color: #27c93f;
+    border: 1px solid #1aab29;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.page-enter {
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Markdown 渲染内容样式 */
+.md-content h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    border-left: 4px solid #3b82f6;
+    padding-left: 0.75rem;
+    margin: 2rem 0 1rem;
+    scroll-margin-top: 1.5rem;
+}
+
+.md-content h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 1.5rem 0 0.75rem;
+}
+
+.md-content p {
+    color: #4b5563;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.md-content strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.md-content ul,
+.md-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    color: #4b5563;
+}
+
+.md-content li {
+    margin-bottom: 0.4rem;
+    line-height: 1.7;
+    list-style-type: disc;
+}
+
+.md-content blockquote {
+    border-left: 3px solid #93c5fd;
+    background: rgba(219, 234, 254, 0.3);
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    color: #1e40af;
+    font-size: 0.9rem;
+}
+
+.md-content blockquote p {
+    margin: 0;
+    color: inherit;
+}
+
+.md-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.md-content th {
+    background: #f3f4f6;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
+}
+
+.md-content td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+}
+
+.md-content code {
+    background: #f3f4f6;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    color: #dc2626;
+}
+
+.md-content img {
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    max-width: 100%;
+    margin: 1rem 0;
+}
+
+.md-content img[src$=".svg"] {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+    padding: 1rem;
+    color-scheme: light;
+}
+
+@keyframes musicRecordSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.music-record {
+    animation: musicRecordSpin 12s linear infinite;
+    animation-play-state: paused;
+}
+
+.music-record-playing {
+    animation-play-state: running;
+}
+
+.music-side-vinyl {
+    animation: popIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, opacity 0.2s ease;
+    cursor: grab;
+}
+
+.music-side-vinyl:hover {
+    transform: translateY(-8px) scale(1.08) rotate(-3deg);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+
+.music-side-vinyl:active,
+.music-side-vinyl.music-vinyl-dragging {
+    cursor: grabbing;
+    transform: translateY(-18px) scale(1.12) rotate(-5deg);
+    box-shadow: 0 32px 60px rgba(0, 0, 0, 0.35);
+    opacity: 0.85;
+    z-index: 50;
+}
+
+.music-stage {
+    width: 992px;
+    height: 620px;
+    transform: scale(0.82);
+}

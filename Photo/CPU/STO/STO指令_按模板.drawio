@@ -1,0 +1,146 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" scale="1" border="0" version="29.0.3">
+  <diagram name="STO指令数据通路优化版" id="sto-dbus-optimized">
+    <mxGraphModel dx="1104" dy="853" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="960" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n_pc" value="PC&lt;br&gt;程序计数器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#2563EB;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="140" y="145" width="125" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="n_im" value="IM&lt;br&gt;指令存储器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#2563EB;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="140" y="245" width="125" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="n_ir_head" value="IR（指令寄存器）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontStyle=1;arcSize=8;" parent="1" vertex="1">
+          <mxGeometry x="100" y="350" width="205" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="n_opcode" value="操作码&lt;br&gt;STO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#60A5FA;fontColor=#1E3A8A;" parent="1" vertex="1">
+          <mxGeometry x="100" y="380" width="102.5" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n_addr" value="地址码&lt;br&gt;R1, 6" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#60A5FA;fontColor=#1E3A8A;" parent="1" vertex="1">
+          <mxGeometry x="202.5" y="380" width="102.5" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n_decoder" value="指令译码器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F0FE;strokeColor=#2563EB;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="142" y="500" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="n_oc" value="OC&lt;br&gt;操作控制器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="142" y="620" width="120" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="n_bus_label" value="DBUS&lt;br&gt;数据总线" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#1D4ED8;strokeWidth=4;fontColor=#1D4ED8;fontStyle=1;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="370" y="105" width="90" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="n_dbus" value="D&lt;br&gt;B&lt;br&gt;U&lt;br&gt;S" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#1D4ED8;strokeWidth=5;fontColor=#1D4ED8;fontStyle=1;arcSize=8;" parent="1" vertex="1">
+          <mxGeometry x="395" y="155" width="42" height="665" as="geometry" />
+        </mxCell>
+        <mxCell id="n_rf" value="寄存器组（R0-R3）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1F5F9;strokeColor=#475569;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="560" y="200" width="180" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n_r0" value="R0" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;fontColor=#111827;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="570" y="260" width="75" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n_r1" value="R1&lt;br&gt;源寄存器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF7ED;strokeColor=#EA580C;fontColor=#111827;fontStyle=1;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="655" y="260" width="75" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="n_r2" value="R2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;fontColor=#111827;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="570" y="315" width="75" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="n_r3" value="R3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#64748B;fontColor=#111827;arcSize=10;" parent="1" vertex="1">
+          <mxGeometry x="655" y="315" width="75" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="n_ar" value="AR&lt;br&gt;地址寄存器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="575" y="460" width="145" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="n_dr" value="DR&lt;br&gt;数据缓冲寄存器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="575" y="610" width="145" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n_dm" value="DM&lt;br&gt;数据存储器&lt;br&gt;M[6]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F3FF;strokeColor=#7C3AED;fontColor=#111827;fontStyle=1;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="575" y="735" width="145" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e_pc_im" value="1. 发出指令地址" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;fontColor=#334155;fontSize=12;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="n_pc" target="n_im" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e_im_ir" value="2. 取出指令" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;fontColor=#334155;fontSize=12;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="n_im" target="n_ir_head" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e_opcode_dec" value="3. 译码" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#64748B;strokeWidth=2;fontColor=#334155;fontSize=12;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="n_opcode" target="n_decoder" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e_dec_oc" value="生成控制信号" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#EA580C;strokeWidth=2;dashed=1;dashPattern=6 4;fontColor=#C2410C;fontSize=12;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="n_decoder" target="n_oc" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n_e_addr_rf" value="选择源寄存器 R1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#EA580C;strokeWidth=2;dashed=1;dashPattern=6 4;fontColor=#C2410C;fontSize=12;exitX=1;exitY=0.5;entryX=0.5;entryY=0;spacingRight=-300;" parent="1" source="n_addr" target="n_rf" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="410" />
+              <mxPoint x="330" y="170" />
+              <mxPoint x="650" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_oc_ar" value="STO控制：AR装入" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#EA580C;strokeWidth=2;dashed=1;dashPattern=6 4;fontColor=#C2410C;fontSize=12;exitX=1;exitY=0.5;entryX=0.5;entryY=0;textShadow=0;spacingRight=-300;" parent="1" source="n_oc" target="n_ar" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="648" />
+              <mxPoint x="330" y="430" />
+              <mxPoint x="648" y="430" />
+              <mxPoint x="648" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_oc_dm" value="写主存控制" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;strokeColor=#EA580C;strokeWidth=2;dashed=1;dashPattern=6 4;fontColor=#C2410C;fontSize=12;exitX=1;exitY=0.5;entryX=0;entryY=0.5;textShadow=0;spacingRight=-260;" parent="1" source="n_oc" target="n_dm" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="330" y="648" />
+              <mxPoint x="330" y="770" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_addr_bus" value="4. 地址码6上DBUS" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=3;fontColor=#1D4ED8;fontSize=12;fontStyle=1;exitX=1;exitY=0.5;entryX=0;entryY=0.39;" parent="1" source="n_addr" target="n_dbus" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_bus_ar" value="5. AR接收地址" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=3;fontColor=#1D4ED8;fontSize=12;fontStyle=1;exitX=1;exitY=0.50;entryX=0;entryY=0.5;" parent="1" source="n_dbus" target="n_ar" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="489" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_ar_dm" value="6. 地址送DM" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=3;fontColor=#1D4ED8;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="n_ar" target="n_dm" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="648" y="560" />
+              <mxPoint x="770" y="560" />
+              <mxPoint x="770" y="710" />
+              <mxPoint x="648" y="710" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_r1_bus" value="7. R1输出数据" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=3;fontColor=#1D4ED8;fontSize=12;fontStyle=1;exitX=0;exitY=0.5;entryX=1;entryY=0.19;" parent="1" source="n_r1" target="n_dbus" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="282" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_bus_dr" value="8. DR接收数据" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=3;fontColor=#1D4ED8;fontSize=12;fontStyle=1;exitX=1;exitY=0.73;entryX=0;entryY=0.5;" parent="1" source="n_dbus" target="n_dr" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_e_dr_dm" value="9. 写入M[6]" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#2563EB;strokeWidth=3;fontColor=#1D4ED8;fontSize=12;fontStyle=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" parent="1" source="n_dr" target="n_dm" edge="1">
+          <mxGeometry x="-0.3846" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n_note" value="&lt;b&gt;一句话流程：&lt;/b&gt;STO R1, 6 = 地址 6 → DBUS → AR → 选中 M[6]；R1 → DBUS → DR → 写入 M[6]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8FAFC;strokeColor=#CBD5E1;fontColor=#111827;arcSize=12;fontSize=13;" parent="1" vertex="1">
+          <mxGeometry x="75" y="850" width="680" height="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

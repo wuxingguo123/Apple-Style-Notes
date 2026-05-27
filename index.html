@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200">
+    <title>Xinguo - 知识库</title>
+
+    <!-- 1. 外部样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- 2. 核心库 (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/idb-keyval@6/dist/umd.js"></script>
+
+    <style>
+        /* Tailwind 自定义配置或小修补 */
+        @layer base {
+            body { color: #1d1d1f; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- React 挂载点 -->
+    <div id="root"></div>
+
+    <!-- 3. 数据配置 (必须在组件之前加载) -->
+    <script src="js/constants.js"></script>
+    <script src="js/music-data.js"></script>
+
+    <!-- 4. 外部交互组件 -->
+    <script type="text/babel" src="components/SimulatorButton.js"></script>
+    <script type="text/babel" src="components/InstructionVisualizer.js"></script>
+    <script type="text/babel" src="Music.jsx"></script>
+
+    <!-- 5. 核心 React 应用逻辑 -->
+    <script type="text/babel" src="js/app.js"></script>
+</body>
+
+</html>
