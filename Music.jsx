@@ -23,7 +23,118 @@ if (typeof window !== "undefined") {
   runTinyTests();
 }
 
-const musicTracks = Array.isArray(window.MUSIC_TRACKS) ? window.MUSIC_TRACKS : [];
+const fallbackMusicTracks = Array.isArray(window.MUSIC_TRACKS) ? window.MUSIC_TRACKS : [];
+const qqPlaylistConfig = window.QQ_MUSIC_PLAYLIST || null;
+const qqPlaylistCache = window.QQ_PLAYLIST_CACHE || null;
+const QQ_MUSIC_PLAYER_URL = "https://i.y.qq.com/n2/m/outchain/player/index.html";
+const VINYL_PALETTES = [
+  ["from-sky-950 via-blue-900 to-black", "bg-sky-200"],
+  ["from-rose-950 via-pink-900 to-black", "bg-rose-300"],
+  ["from-violet-950 via-purple-900 to-black", "bg-violet-200"],
+  ["from-amber-950 via-orange-900 to-black", "bg-amber-200"]
+];
+
+function getTrackLabel(track) {
+  return `${track.song} - ${track.artist || "Unknown"}`;
+}
+
+function isQQMusicTrack(track) {
+  return Boolean(track && (track.source === "qq" || track.qqSongId || track.qqMusicUrl || track.qqPlayerSrc));
+}
+
+function extractQQSongId(value) {
+  if (!value) return "";
+  const source = String(value);
+  const queryMatch = source.match(/[?&#](?:songid|songId|songdetail)=([0-9]+)/i);
+  if (queryMatch) return queryMatch[1];
+
+  return /^[0-9]+$/.test(source.trim()) ? source.trim() : "";
+}
+
+function addQQAutoplayParams(src) {
+  try {
+    const url = new URL(src, window.location.href);
+    url.searchParams.set("auto", "1");
+    url.searchParams.set("autoplay", "1");
+    return url.href;
+  } catch (error) {
+    return src;
+  }
+}
+
+function getQQPlayerSrc(track) {
+  if (!track) return "";
+  if (track.qqPlayerSrc) return addQQAutoplayParams(track.qqPlayerSrc);
+
+  const songId = track.qqSongId || extractQQSongId(track.qqMusicUrl || track.audioSrc);
+  if (!songId) return "";
+
+  const url = new URL(QQ_MUSIC_PLAYER_URL);
+  url.searchParams.set("songid", songId);
+  url.searchParams.set("songtype", String(track.qqPlayerSongType ?? track.qqSongType ?? 0));
+  url.searchParams.set("auto", "1");
+  url.searchParams.set("autoplay", "1");
+  return url.href;
+}
+
+function shuffleTracks(items) {
+  const copy = items.slice();
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function withVinylPalette(track, index) {
+  const palette = VINYL_PALETTES[index % VINYL_PALETTES.length];
+  return {
+    ...track,
+    gradient: palette[0],
+    label: palette[1],
+    playback: track.audioSrc ? "direct" : "iframe"
+  };
+}
+
+function getCachedRandomQQTracks(count = 4) {
+  const cachedTracks = Array.isArray(qqPlaylistCache?.tracks) ? qqPlaylistCache.tracks : [];
+  if (cachedTracks.length === 0) return null;
+
+  return {
+    mode: "cache",
+    playlist: qqPlaylistCache.playlist || {
+      id: qqPlaylistConfig?.id || "cache",
+      title: qqPlaylistConfig?.title || "QQ 音乐歌单"
+    },
+    tracks: shuffleTracks(cachedTracks)
+      .slice(0, count)
+      .map((track, index) => withVinylPalette(track, index))
+  };
+}
+
+async function fetchRandomQQTracks() {
+  if (!qqPlaylistConfig || !qqPlaylistConfig.id) return null;
+
+  const params = new URLSearchParams({
+    id: qqPlaylistConfig.id,
+    count: String(qqPlaylistConfig.count || 4)
+  });
+  try {
+    const response = await fetch(`/api/qq-playlist-random?${params.toString()}`);
+    if (!response.ok) {
+      throw new Error(`QQ playlist request failed: ${response.status}`);
+    }
+
+    return {
+      mode: "api",
+      ...(await response.json())
+    };
+  } catch (error) {
+    const cached = getCachedRandomQQTracks(Number(qqPlaylistConfig.count || 4));
+    if (cached) return cached;
+    throw error;
+  }
+}
 
 function VinylRecord({ playing, vinyl }) {
   return (
@@ -288,21 +399,18 @@ function ToneArm({ angle, isDragging, onPointerDown, onPointerMove, onPointerUp 
 }
 
 function Music() {
-  if (musicTracks.length === 0) {
-    return (
-      <section className="apple-card rounded-[24px] p-8 text-sm text-gray-500">
-        没有找到曲目配置，请检查 js/music-data.js。
-      </section>
-    );
-  }
-
+  const [tracks, setTracks] = React.useState(fallbackMusicTracks);
+  const [playlistTitle, setPlaylistTitle] = React.useState(qqPlaylistConfig?.title || "QQ 音乐歌单");
+  const [loadingPlaylist, setLoadingPlaylist] = React.useState(Boolean(qqPlaylistConfig?.id));
   const [draggingArm, setDraggingArm] = React.useState(false);
   const [armAngle, setArmAngle] = React.useState(-18);
-  const [currentVinyl, setCurrentVinyl] = React.useState(musicTracks[0]);
-  const [audioStatus, setAudioStatus] = React.useState("把唱针放到唱片上，或点击右侧唱片开始播放。");
+  const [currentVinyl, setCurrentVinyl] = React.useState(fallbackMusicTracks[0] || null);
+  const [audioStatus, setAudioStatus] = React.useState("正在从 QQ 音乐歌单随机抽 4 首歌…");
   const [isAudioPlaying, setIsAudioPlaying] = React.useState(false);
   const [needsUserGesture, setNeedsUserGesture] = React.useState(false);
+  const [qqPlayerSrc, setQqPlayerSrc] = React.useState("");
   const audioRef = React.useRef(null);
+  const qqPlayerRef = React.useRef(null);
 
   const needleOnDisc = isNeedleOnDisc(armAngle);
   const playing = needleOnDisc && isAudioPlaying;
@@ -311,12 +419,15 @@ function Music() {
     return () => {
       const audio = audioRef.current;
       if (audio) audio.pause();
+      if (qqPlayerRef.current) qqPlayerRef.current.src = "about:blank";
     };
   }, []);
 
   const prepareAudio = React.useCallback((track) => {
+    if (isQQMusicTrack(track) && !track.audioSrc) return null;
+
     const audio = audioRef.current;
-    if (!audio || !track) return null;
+    if (!audio || !track || !track.audioSrc) return null;
 
     const nextSrc = new URL(track.audioSrc, window.location.href).href;
     if (audio.src !== nextSrc) {
@@ -330,16 +441,79 @@ function Music() {
   const pauseTrack = React.useCallback((message) => {
     const audio = audioRef.current;
     if (audio) audio.pause();
+    if (qqPlayerRef.current) qqPlayerRef.current.src = "about:blank";
+    setQqPlayerSrc("");
     setIsAudioPlaying(false);
     setAudioStatus(message || "已暂停。");
   }, []);
 
+  const loadRandomTracks = React.useCallback(async () => {
+    if (!qqPlaylistConfig?.id) return;
+
+    pauseTrack("正在从 QQ 音乐歌单随机抽 4 首歌…");
+    setLoadingPlaylist(true);
+
+    try {
+      const data = await fetchRandomQQTracks();
+      if (!data || !Array.isArray(data.tracks) || data.tracks.length === 0) {
+        throw new Error("QQ playlist returned no tracks");
+      }
+
+      setTracks(data.tracks);
+      setCurrentVinyl(data.tracks[0]);
+      setPlaylistTitle(data.playlist?.title || "QQ 音乐歌单");
+      setArmAngle(-18);
+      setNeedsUserGesture(false);
+      setAudioStatus(
+        data.mode === "cache"
+          ? "已从静态缓存随机抽 4 首。GitHub Pages 上需要点播放器播放键。"
+          : "已从歌单随机抽 4 首。把唱片放上去会优先自动播放。"
+      );
+    } catch (error) {
+      setTracks(fallbackMusicTracks);
+      setCurrentVinyl(fallbackMusicTracks[0]);
+      setAudioStatus("歌单读取失败，已使用备用曲目。请确认用 node server.js 启动页面。");
+    } finally {
+      setLoadingPlaylist(false);
+    }
+  }, [pauseTrack]);
+
+  React.useEffect(() => {
+    loadRandomTracks();
+  }, [loadRandomTracks]);
+
   const playTrack = React.useCallback((track, restart = false) => {
+    if (!track) return;
+
+    const trackLabel = getTrackLabel(track);
+
+    if (isQQMusicTrack(track) && !track.audioSrc) {
+      const audio = audioRef.current;
+      if (audio) audio.pause();
+
+      const playerSrc = getQQPlayerSrc(track);
+      if (!playerSrc) {
+        setIsAudioPlaying(false);
+        setNeedsUserGesture(false);
+        setAudioStatus(`QQ 音乐链接缺少 songid：${trackLabel}`);
+        return;
+      }
+
+      if (qqPlayerRef.current) qqPlayerRef.current.src = playerSrc;
+      setQqPlayerSrc(playerSrc);
+      setIsAudioPlaying(true);
+      setNeedsUserGesture(false);
+      setAudioStatus(`已唤起 QQ 音乐：${trackLabel}。如果没有声音，请点播放器播放键。`);
+      return;
+    }
+
+    setQqPlayerSrc("");
+    if (qqPlayerRef.current) qqPlayerRef.current.src = "about:blank";
+
     const audio = prepareAudio(track);
-    if (!audio || !track) return;
+    if (!audio) return;
     if (restart) audio.currentTime = 0;
 
-    const trackLabel = `${track.song} - ${track.artist || "Unknown"}`;
     const markPlaying = () => {
       setIsAudioPlaying(true);
       setNeedsUserGesture(false);
@@ -383,8 +557,8 @@ function Music() {
       setArmAngle(-18);
     }
     setCurrentVinyl(vinyl);
-    prepareAudio(vinyl);
-    setAudioStatus(`已放入：${vinyl.song} - ${vinyl.artist || "Unknown"}，拨动唱针开始播放。`);
+    setArmAngle(42);
+    playTrack(vinyl, true);
   };
 
   const togglePlayback = () => {
@@ -440,9 +614,22 @@ function Music() {
   const handleDeckDrop = (event) => {
     event.preventDefault();
     const id = event.dataTransfer.getData("vinyl-id");
-    const vinyl = musicTracks.find((item) => item.id === id);
+    const vinyl = tracks.find((item) => item.id === id);
     if (vinyl) dropVinylOnDeck(vinyl);
   };
+
+  if (tracks.length === 0 || !currentVinyl) {
+    return (
+      <section className="apple-card rounded-[24px] p-8 text-sm text-gray-500">
+        没有找到曲目配置，请检查 js/music-data.js。
+      </section>
+    );
+  }
+
+  const currentQQSongId = currentVinyl.qqSongId || extractQQSongId(currentVinyl.qqMusicUrl || currentVinyl.audioSrc);
+  const currentSourceLabel = isQQMusicTrack(currentVinyl)
+    ? `QQ 音乐${currentVinyl.audioSrc ? "直链" : "外链"}：${currentQQSongId || "请填写 songid"}`
+    : `音频文件：${currentVinyl.audioSrc}`;
 
   return (
     <section className="mb-12 w-full overflow-hidden rounded-[28px] border border-white/70 bg-[radial-gradient(circle_at_50%_0%,#ffffff_0%,#f5efe7_45%,#dfc3a2_100%)] p-4 shadow-sm md:p-6">
@@ -458,10 +645,18 @@ function Music() {
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <p className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-500">Music</p>
-          <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">Debbyone</h2>
+          <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-950">{playlistTitle}</h2>
         </div>
         <div className="flex items-center gap-3">
           <p className="max-w-[260px] text-right text-xs font-semibold leading-relaxed text-slate-500">拖动唱针播放，点击或拖拽右侧唱片切换曲目。</p>
+          <button
+            type="button"
+            onClick={loadRandomTracks}
+            disabled={loadingPlaylist}
+            className="rounded-full bg-white/70 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-slate-800 shadow-lg ring-1 ring-white/80 transition hover:-translate-y-0.5 hover:bg-white disabled:cursor-wait disabled:opacity-60"
+          >
+            {loadingPlaylist ? "Loading" : "Random 4"}
+          </button>
           <button
             type="button"
             onClick={togglePlayback}
@@ -500,13 +695,25 @@ function Music() {
             />
           </section>
 
-          <SideVinylRack vinyls={musicTracks} currentVinyl={currentVinyl} onSelect={selectVinyl} />
+          <SideVinylRack vinyls={tracks} currentVinyl={currentVinyl} onSelect={selectVinyl} />
         </div>
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-4 rounded-2xl bg-white/45 px-4 py-3 text-xs font-semibold text-slate-600 ring-1 ring-white/60">
-        <span>音频文件：{currentVinyl.audioSrc}</span>
+        <span>{currentSourceLabel}</span>
         <span className={playing ? "text-green-600" : "text-slate-500"}>{audioStatus}</span>
+      </div>
+
+      <div className={`mt-3 flex justify-end ${qqPlayerSrc ? "" : "h-0 overflow-hidden opacity-0"}`}>
+        <iframe
+          ref={qqPlayerRef}
+          title={`QQ 音乐播放器 - ${currentVinyl.song}`}
+          src={qqPlayerSrc || "about:blank"}
+          width="330"
+          height="65"
+          allow="autoplay; encrypted-media"
+          className="rounded-xl border-0 bg-white/70 shadow-sm ring-1 ring-white/70"
+        />
       </div>
     </section>
   );
